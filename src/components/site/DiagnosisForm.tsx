@@ -15,7 +15,12 @@ const models = [
 
 const yesNoUnsure = ["Yes", "No", "Not sure"];
 
-type Errors = Partial<Record<"name" | "phone" | "problem" | "description", string>>;
+type Errors = Partial<
+  Record<
+    "name" | "phone" | "model" | "problem" | "turnsOn" | "display" | "previouslyRepaired" | "description",
+    string
+  >
+>;
 
 const field =
   "border-input bg-secondary/40 placeholder:text-muted-foreground w-full rounded-xl border px-4 py-3 text-sm outline-none focus-visible:border-primary";
@@ -33,11 +38,13 @@ export function DiagnosisForm({
   const [values, setValues] = useState({
     name: "",
     phone: "",
-    model: models[0],
-    problem: problems.find((p) => p.id === initialProblem)?.title ?? "Other Problem",
-    turnsOn: yesNoUnsure[0],
-    display: yesNoUnsure[0],
-    previouslyRepaired: yesNoUnsure[1],
+    model: "",
+    problem: initialProblem
+      ? problems.find((p) => p.id === initialProblem)?.title ?? ""
+      : "",
+    turnsOn: "",
+    display: "",
+    previouslyRepaired: "",
     description: "",
   });
   const [errors, setErrors] = useState<Errors>({});
@@ -52,6 +59,11 @@ export function DiagnosisForm({
     const digits = values.phone.replace(/[^\d]/g, "");
     if (digits.length < 9)
       next.phone = "Please enter a valid UAE phone number, e.g. 05X XXX XXXX.";
+    if (!values.model) next.model = "Please select your PS5 model.";
+    if (!values.problem) next.problem = "Please select the problem.";
+    if (!values.turnsOn) next.turnsOn = "Please select an option.";
+    if (!values.display) next.display = "Please select an option.";
+    if (!values.previouslyRepaired) next.previouslyRepaired = "Please select an option.";
     if (values.description.trim().length < 10)
       next.description = "Please describe the problem in a little more detail.";
     return next;
@@ -104,6 +116,7 @@ export function DiagnosisForm({
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "df-name-error" : undefined}
             autoComplete="name"
+            required
           />
           {errors.name ? (
             <p id="df-name-error" role="alert" className="text-destructive mt-2 text-xs">
@@ -126,6 +139,7 @@ export function DiagnosisForm({
             aria-invalid={Boolean(errors.phone)}
             aria-describedby={errors.phone ? "df-phone-error" : undefined}
             autoComplete="tel"
+            required
           />
           {errors.phone ? (
             <p
@@ -147,11 +161,24 @@ export function DiagnosisForm({
             className={field}
             value={values.model}
             onChange={(e) => set("model", e.target.value)}
+            aria-invalid={Boolean(errors.model)}
+            aria-describedby={errors.model ? "df-model-error" : undefined}
+            required
           >
+            <option value="" disabled>
+              Select your model
+            </option>
             {models.map((m) => (
-              <option key={m}>{m}</option>
+              <option key={m} value={m}>
+                {m}
+              </option>
             ))}
           </select>
+          {errors.model ? (
+            <p id="df-model-error" role="alert" className="text-destructive mt-2 text-xs">
+              {errors.model}
+            </p>
+          ) : null}
         </div>
 
         <div>
@@ -163,11 +190,28 @@ export function DiagnosisForm({
             className={field}
             value={values.problem}
             onChange={(e) => set("problem", e.target.value)}
+            aria-invalid={Boolean(errors.problem)}
+            aria-describedby={errors.problem ? "df-problem-error" : undefined}
+            required
           >
+            <option value="" disabled>
+              Select the problem
+            </option>
             {problems.map((p) => (
-              <option key={p.id}>{p.title}</option>
+              <option key={p.id} value={p.title}>
+                {p.title}
+              </option>
             ))}
           </select>
+          {errors.problem ? (
+            <p
+              id="df-problem-error"
+              role="alert"
+              className="text-destructive mt-2 text-xs"
+            >
+              {errors.problem}
+            </p>
+          ) : null}
         </div>
 
         {(
@@ -186,11 +230,28 @@ export function DiagnosisForm({
               className={field}
               value={values[key]}
               onChange={(e) => set(key, e.target.value)}
+              aria-invalid={Boolean(errors[key])}
+              aria-describedby={errors[key] ? `df-${key}-error` : undefined}
+              required
             >
+              <option value="" disabled>
+                Select an option
+              </option>
               {yesNoUnsure.map((o) => (
-                <option key={o}>{o}</option>
+                <option key={o} value={o}>
+                  {o}
+                </option>
               ))}
             </select>
+            {errors[key] ? (
+              <p
+                id={`df-${key}-error`}
+                role="alert"
+                className="text-destructive mt-2 text-xs"
+              >
+                {errors[key]}
+              </p>
+            ) : null}
           </div>
         ))}
 
@@ -207,6 +268,7 @@ export function DiagnosisForm({
             onChange={(e) => set("description", e.target.value)}
             aria-invalid={Boolean(errors.description)}
             aria-describedby={errors.description ? "df-description-error" : undefined}
+            required
           />
           {errors.description ? (
             <p
