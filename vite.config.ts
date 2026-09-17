@@ -10,7 +10,7 @@ const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === "true";
 
 export default defineConfig({
   vite: {
-    base: isGitHubPagesBuild ? "/ps5-fix-hub/" : "/",
+    base: isGitHubPagesBuild ? "/PS5-Repairs/" : "/",
   },
   nitro: isGitHubPagesBuild ? false : undefined,
   tanstackStart: {
