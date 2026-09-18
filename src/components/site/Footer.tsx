@@ -60,7 +60,7 @@ export function Footer() {
                   className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 transition-colors"
                 >
                   <MessageCircle className="size-4" aria-hidden="true" />
-                  WhatsApp {business.phone}
+                  WhatsApp
                 </a>
               </li>
               <li>
@@ -79,7 +79,7 @@ export function Footer() {
                   className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 break-all transition-colors"
                 >
                   <Mail className="size-4" aria-hidden="true" />
-                  {business.email}
+                  Email
                 </a>
               </li>
               <li className="text-muted-foreground inline-flex items-center gap-2">

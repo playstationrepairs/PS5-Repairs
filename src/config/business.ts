@@ -19,7 +19,7 @@ export const business = {
   /** Display + tel: link */
   phone: "+971 56 954 2265",
   phoneHref: "+971569542265",
-  email: "sajed619007@gmail.com",
+  email: "playstation.repairs.010@gmail.com",
 
   businessHours: "We usually reply within a few hours.",
 
